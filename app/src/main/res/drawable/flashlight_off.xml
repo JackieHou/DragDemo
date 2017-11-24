@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportHeight="40"
+    android:viewportWidth="40">
+    <group
+        android:name="root"
+        android:pivotX="15"
+        android:pivotY="17"
+        android:rotation="0">
+
+        <path
+            android:name="mask"
+            android:fillColor="#666666"
+            android:pathData="M12.5 16.979198l3.325566 4.704105 -0.000082 11.048759c-0.000004 0.585691 0.470811 1.060484 1.069882 1.06048l6.174213 -0.000039c0.590883 -0.000003 1.069892 -0.469446 1.069895 -1.060493l0.000083 -11.048759 3.325626 -4.704148 0.000029 -4.703343 -14.965182 0.000094 -0.00003 4.703344zm14.965219 -5.77238l0.000014 -2.1389985C27.465237 8.4780753 26.984271 7.9999962 26.38898 8l-12.812664 0.000081c-0.594402 0.0000038 -1.076262 0.4731849 -1.076266 1.0678331l-0.000013 2.1389989 14.965182 -0.000095z" />
+
+    </group>
+
+
+    <group
+        android:rotation="45"
+        android:translateX="23"
+        android:translateY="-1">
+
+        <path
+            android:name="cross_1"
+            android:fillAlpha="0"
+            android:fillColor="#FFC200"
+            android:pathData="M10.5 0.99980749C10.5 0.44762906 10.94266 0 11.498957 0l1.002086 0C13.052752 0 13.5 0.44371665 13.5 0.99980749l0 3.00038501C13.5 4.5523709 13.05734 5 12.501043 5L11.498957 5C10.947248 5 10.5 4.5562833 10.5 4.0001925l0 -3.00038501z" />
+        <group
+            android:rotation="30"
+            android:translateX="4.563467"
+            android:translateY="-10.03109">
+            <path
+                android:name="cross_2"
+                android:fillAlpha="0"
+                android:fillColor="#FFC200"
+                android:pathData="M19.5 1.9998075C19.5 1.4476291 19.94266 1 20.498957 1l1.002086 0C22.052752 1 22.5 1.4437166 22.5 1.9998075l0 3.000385C22.5 5.5523709 22.05734 6 21.501043 6L20.498957 6C19.947248 6 19.5 5.5562833 19.5 5.0001925l0 -3.000385z" />
+        </group>
+        <group
+            android:rotation="-30"
+            android:translateX="-1.348076"
+            android:translateY="1.968911">
+            <path
+                android:name="cross_3"
+                android:fillAlpha="0"
+                android:fillColor="#FFC200"
+                android:pathData="M1.5 1.9998075C1.5 1.4476291 1.9426603 1 2.4989566 1L3.5010434 1C4.0527519 1 4.5 1.4437166 4.5 1.9998075l0 3.000385C4.5 5.5523709 4.0573397 6 3.5010434 6L2.4989566 6C1.9472481 6 1.5 5.5562833 1.5 5.0001925l0 -3.000385z" />
+        </group>
+    </group>
+</vector>

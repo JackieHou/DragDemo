@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jackiehou.dragdemo.views.CircleLayoutPlanB
+        android:id="@+id/circle_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_widthPercent="74%w"
+        app:layout_heightPercent="74%w"
+        android:layout_centerInParent="true"
+        android:background="@drawable/circle_bg">
+        <com.jackiehou.dragdemo.views.DragCheckedTv
+            android:id="@+id/img1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/auto_bright_selector"
+            android:tag="circle1"
+            android:clickable="true"
+            />
+        <com.jackiehou.dragdemo.views.DragCheckedTv
+            android:id="@+id/img2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bluetooth_selector"
+            android:clickable="true"
+            android:tag="circle1"/>
+
+        <com.jackiehou.dragdemo.views.DragCheckedTv
+            android:id="@+id/img3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/dnd_selector"
+            android:clickable="true"
+            android:tag="circle1"/>
+        <com.jackiehou.dragdemo.views.DragCheckedTv
+            android:id="@+id/img4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/network_selector"
+            android:clickable="true"
+            android:tag="circle1"/>
+        <com.jackiehou.dragdemo.views.DragCheckedTv
+            android:id="@+id/img5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/wifi_selector"
+            android:clickable="true"
+            android:tag="circle1"/>
+        <com.jackiehou.dragdemo.views.DragCheckedTv
+            android:id="@+id/img6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/flashlight_selector"
+            android:clickable="true"
+            android:tag="circle1" />
+    </com.jackiehou.dragdemo.views.CircleLayoutPlanB>
+
+</com.zhy.android.percent.support.PercentRelativeLayout>
