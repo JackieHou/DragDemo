@@ -5,6 +5,8 @@ import android.app.Application;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.jackiehou.dragdemo.manager.OrmHelper;
+
 /************************************************************
  * Created by houjie
  * Description:     // 模块描述
@@ -24,7 +26,11 @@ public class MyApp extends Application implements Application.ActivityLifecycleC
         super.onCreate();
         myApp = this;
 
+        OrmHelper.getHelper(this).init();
+
         ActivityRecorder.getInstance().init();
+
+
 
         registerActivityLifecycleCallbacks(this);
     }

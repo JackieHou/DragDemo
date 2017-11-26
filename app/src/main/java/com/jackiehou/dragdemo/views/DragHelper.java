@@ -26,6 +26,7 @@ import com.annimon.stream.Stream;
 import com.jackiehou.dragdemo.Utils;
 import com.jackiehou.dragdemo.entity.DragItemEntity;
 import com.jackiehou.dragdemo.entity.DragTaget;
+import com.jackiehou.dragdemo.manager.OrmHelper;
 
 import java.util.List;
 
@@ -201,7 +202,7 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         Rect leftRect = new Rect();
         mLeftLayout.getGlobalVisibleRect(leftRect);
         if (leftRect.equals(mLeftRect) && changeCorner != mCircleLayout.getChangeCorner()) {
-            circleRects =getRectsByData(context,mCircleLayout,Stream.of(Utils.CIRCLE_ITEM_LIST));
+            circleRects =getRectsByData(context,mCircleLayout,Stream.of(OrmHelper.getHelper().getCircleDragItem()));
         } else {
             Rect rightRect = new Rect();
             mRightLayout.getGlobalVisibleRect(rightRect);
@@ -212,9 +213,9 @@ public class DragHelper implements GestureDetector.OnGestureListener{
             mRightRect = rightRect;
             mCircleRect = circleRect;
 
-            leftRects =getRectsByData(context,mLeftLayout,Stream.of(Utils.LEFT_ITEM_LIST));
-            rightRects =getRectsByData(context,mRightLayout,Stream.of(Utils.RIGHT_ITEM_LIST));
-            circleRects =getRectsByData(context,mCircleLayout,Stream.of(Utils.CIRCLE_ITEM_LIST));
+            leftRects =getRectsByData(context,mLeftLayout,Stream.of(OrmHelper.getHelper().getLeftDragItem()));
+            rightRects =getRectsByData(context,mRightLayout,Stream.of(OrmHelper.getHelper().getRightDragItem()));
+            circleRects =getRectsByData(context,mCircleLayout,Stream.of(OrmHelper.getHelper().getCircleDragItem()));
         }
         changeCorner = mCircleLayout.getChangeCorner();
     }
@@ -335,7 +336,7 @@ public class DragHelper implements GestureDetector.OnGestureListener{
             animView.setText(item.getTitle());
             animView.setBackground(fromView.getBackground());
         }else {
-            animView.setBackgroundResource( Utils.getResId(fromView.getContext(),"drawable",item.getIconStr()));
+            animView.setBackgroundResource( Utils.getResId(fromView.getContext(),"drawable",item.getIconName()));
         }
 
         dragLayout.addView(animView,params);
@@ -366,7 +367,7 @@ public class DragHelper implements GestureDetector.OnGestureListener{
 
     private void updateFromView(DragItemEntity item) {
         if (fromView instanceof CheckedTextView) {
-            fromView.setBackgroundResource(Utils.getResId(fromView.getContext(), "drawable", item.getIconStr()));
+            fromView.setBackgroundResource(Utils.getResId(fromView.getContext(), "drawable", item.getIconName()));
         } else {
             fromView.setText(item.getTitle());
         }
@@ -374,7 +375,7 @@ public class DragHelper implements GestureDetector.OnGestureListener{
 
     private void updateView(DragItemEntity item, TextView textView) {
         if (textView instanceof CheckedTextView) {
-            textView.setBackgroundResource(Utils.getResId(textView.getContext(), "drawable", item.getIconStr()));
+            textView.setBackgroundResource(Utils.getResId(textView.getContext(), "drawable", item.getIconName()));
         } else {
             textView.setText(item.getTitle());
         }

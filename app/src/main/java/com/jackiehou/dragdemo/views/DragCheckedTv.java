@@ -7,9 +7,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.CheckedTextView;
 
-import com.jackiehou.dragdemo.widget1.CircleLayout1;
+import com.annimon.stream.function.Consumer;
 
-import java.util.function.Consumer;
 
 /************************************************************
  * Created by houjie
@@ -57,8 +56,8 @@ public class DragCheckedTv extends CheckedTextView implements Consumer<Boolean> 
     }
 
     public boolean getDragging(){
-        if(getParent() != null && getParent() instanceof CircleLayout1){
-            CircleLayout1 parent = (CircleLayout1) getParent();
+        if(getParent() != null && getParent() instanceof CircleLayoutPlanB){
+            CircleLayoutPlanB parent = (CircleLayoutPlanB) getParent();
             Log.i(TAG,"getDragging = "+parent.getDragging());
             return parent.getDragging();
         }

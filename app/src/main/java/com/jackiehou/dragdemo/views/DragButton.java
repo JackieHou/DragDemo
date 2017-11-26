@@ -7,9 +7,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 
-import com.jackiehou.dragdemo.widget1.CircleLayout1;
+import com.annimon.stream.function.Consumer;
 
-import java.util.function.Consumer;
 
 /************************************************************
  * Created by houjie
@@ -18,7 +17,7 @@ import java.util.function.Consumer;
  ************************************************************/
 
 @SuppressLint({"AppCompatCustomView", "NewApi"})
-public class DragButton extends Button implements Consumer<Boolean>{
+public class DragButton extends Button implements Consumer<Boolean> {
 
     boolean isLongDrag = false;
 
@@ -59,8 +58,8 @@ public class DragButton extends Button implements Consumer<Boolean>{
     }
 
     public boolean getDragging(){
-        if(getParent() != null && getParent() instanceof CircleLayout1){
-            CircleLayout1 parent = (CircleLayout1) getParent();
+        if(getParent() != null && getParent() instanceof CircleLayoutPlanB){
+            CircleLayoutPlanB parent = (CircleLayoutPlanB) getParent();
             Log.i(TAG,"getDragging = "+parent.getDragging());
             return parent.getDragging();
         }

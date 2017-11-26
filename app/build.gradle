@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
+    buildToolsVersion '26.0.2'
     compileSdkVersion 25
     defaultConfig {
         applicationId "com.jackiehou.dragdemo"
@@ -10,6 +11,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
     }
     buildTypes {
         release {
@@ -17,14 +19,29 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.zhy:percent-support-extends:1.0.1'
     compile 'com.nelson:CircleLayout:0.1.1'
+    //android 低版本使用java8的stream（Android N（7.0）及以上才支持stream）
     compile 'com.annimon:stream:1.1.4'
+    //greendao
     compile 'org.greenrobot:greendao:3.2.2'
+}
 
+greendao{
+    //数据库版本号
+    schemaVersion 1
+    //greendao生成代码的位置
+    //targetGenDir 'src/main/java'
+    //greendao生成代码的包名
+    //daoPackage 'greendao'
 }

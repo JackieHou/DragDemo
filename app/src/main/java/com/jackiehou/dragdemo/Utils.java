@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Utils {
 
-    public final static ArrayList<DragItemEntity> CIRCLE_ITEM_LIST = new ArrayList<DragItemEntity>();
+    /*public final static ArrayList<DragItemEntity> CIRCLE_ITEM_LIST = new ArrayList<DragItemEntity>();
 
     public final static ArrayList<DragItemEntity> LEFT_ITEM_LIST = new ArrayList<DragItemEntity>();
 
@@ -34,7 +34,7 @@ public class Utils {
         RIGHT_ITEM_LIST.add(new DragItemEntity("right_btn1","ic_qs_dnd_on","勿扰"));
         RIGHT_ITEM_LIST.add(new DragItemEntity("right_btn2","ic_qs_signal_4g","4G"));
         RIGHT_ITEM_LIST.add(new DragItemEntity("right_btn3","ic_qs_vpn","vpn"));
-    }
+    }*/
 
     /**
      * 根据资源名称找资源id

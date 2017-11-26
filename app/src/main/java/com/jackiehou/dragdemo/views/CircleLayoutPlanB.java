@@ -353,6 +353,10 @@ public class CircleLayoutPlanB extends ViewGroup implements GestureDetector.OnGe
         return true;
     }
 
+    public boolean getDragging() {
+        return isDragging;
+    }
+
     private class FlingRunnable implements Runnable {
         double v;//初始速度
 

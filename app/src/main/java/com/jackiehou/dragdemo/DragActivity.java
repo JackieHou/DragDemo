@@ -9,11 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
+import com.jackiehou.dragdemo.manager.OrmHelper;
 import com.jackiehou.dragdemo.views.CircleLayoutPlanB;
 import com.jackiehou.dragdemo.views.DragHelper;
 import com.jackiehou.dragdemo.views.DragLayout;
 
-import java.util.function.Consumer;
 
 public class DragActivity extends BaseActivity {
 
@@ -46,7 +47,7 @@ public class DragActivity extends BaseActivity {
 
         //长安事件
         Stream.of(R.id.left_btn1,R.id.left_btn2,R.id.left_btn3,R.id.right_btn1,R.id.right_btn2,R.id.right_btn3,
-                R.id.img1,R.id.img2,R.id.img3,R.id.img4,R.id.img5,R.id.img6)
+                R.id.bottom_btn1,R.id.bottom_btn2,R.id.img1,R.id.img2,R.id.img3,R.id.img4,R.id.img5,R.id.img6)
                 .map(id -> findViewById(id))
                 .forEach(view -> view.setOnLongClickListener(v -> addToDrag(v)));
 
@@ -57,13 +58,13 @@ public class DragActivity extends BaseActivity {
      */
     @SuppressLint("NewApi")
     private void setupViews() {
-        Stream.of(Utils.CIRCLE_ITEM_LIST,Utils.LEFT_ITEM_LIST,Utils.RIGHT_ITEM_LIST)
+        Stream.of(OrmHelper.getHelper().getAllDragItem())
                 .flatMap(items -> Stream.of(items))
                 .forEach(item ->{
                     int id = Utils.getResId(DragActivity.this,"id",item.getKey());
                     TextView view = (TextView) findViewById(id);
                     if(view instanceof CheckedTextView){
-                        view.setBackgroundResource( Utils.getResId(DragActivity.this,"drawable",item.getIconStr()));
+                        view.setBackgroundResource( Utils.getResId(DragActivity.this,"drawable",item.getIconName()));
                     }else {
                         view.setText(item.getTitle());
                     }
