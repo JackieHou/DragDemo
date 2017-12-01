@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.widget.Button;
 
 import com.annimon.stream.function.Consumer;
+import com.annimon.stream.function.Supplier;
 
 
 /************************************************************
@@ -58,8 +59,8 @@ public class DragButton extends Button implements Consumer<Boolean> {
     }
 
     public boolean getDragging(){
-        if(getParent() != null && getParent() instanceof CircleLayoutPlanB){
-            CircleLayoutPlanB parent = (CircleLayoutPlanB) getParent();
+        if(getParent() != null && getParent() instanceof CircleLayout){
+            CircleLayout parent = (CircleLayout) getParent();
             Log.i(TAG,"getDragging = "+parent.getDragging());
             return parent.getDragging();
         }

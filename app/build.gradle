@@ -29,15 +29,18 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:25.4.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.zhy:percent-support-extends:1.0.1'
-    compile 'com.nelson:CircleLayout:0.1.1'
+    //compile 'com.nelson:CircleLayout:0.1.1'
     //android 低版本使用java8的stream（Android N（7.0）及以上才支持stream）
     compile 'com.annimon:stream:1.1.4'
     //greendao
     compile 'org.greenrobot:greendao:3.2.2'
+
+    compile 'io.paperdb:paperdb:2.1'
 }
 
-greendao{
+greendao {
     //数据库版本号
     schemaVersion 1
     //greendao生成代码的位置

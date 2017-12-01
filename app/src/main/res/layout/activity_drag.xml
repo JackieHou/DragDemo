@@ -5,161 +5,197 @@
     android:id="@+id/drag_rl"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
-    <LinearLayout
-        android:id="@+id/left_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        >
-
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/left_btn1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="item1"
-            android:tag="left1"
-            android:layout_centerHorizontal="true"
-            />
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/left_btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="item2"
-            android:tag="left2"
-            android:layout_centerHorizontal="true"
-            />
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/left_btn3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="item3"
-            android:tag="left3"
-            android:layout_centerHorizontal="true"
-            />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/right_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        >
-
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/right_btn1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="item1"
-            android:tag="right1"
-            android:layout_centerHorizontal="true"
-            />
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/right_btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="item2"
-            android:tag="right2"
-            android:layout_centerHorizontal="true"
-            />
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/right_btn3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag="right1"
-            android:layout_centerHorizontal="true"
-            />
-
-    </LinearLayout>
-
-
-    <com.jackiehou.dragdemo.views.CircleLayoutPlanB
-        android:id="@+id/cl"
+    <ScrollView
+        android:id="@+id/sv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/left_ll"
-        android:layout_toStartOf="@+id/right_ll"
-        android:layout_centerVertical="true">
-        <com.jackiehou.dragdemo.views.DragCheckedTv
-            android:id="@+id/img1"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/auto_bright_selector"
-            android:tag="circle1"
-            android:clickable="true"
-            />
-        <com.jackiehou.dragdemo.views.DragCheckedTv
-            android:id="@+id/img2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/bluetooth_selector"
-            android:clickable="true"
-            android:tag="circle1"/>
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="111111111111111"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:visibility="gone"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22222222222222222"/>
 
-        <com.jackiehou.dragdemo.views.DragCheckedTv
-            android:id="@+id/img3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/dnd_selector"
-            android:clickable="true"
-            android:tag="circle1"/>
-        <com.jackiehou.dragdemo.views.DragCheckedTv
-            android:id="@+id/img4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/network_selector"
-            android:clickable="true"
-            android:tag="circle1"/>
-        <com.jackiehou.dragdemo.views.DragCheckedTv
-            android:id="@+id/img5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/wifi_selector"
-            android:clickable="true"
-            android:tag="circle1"/>
-        <com.jackiehou.dragdemo.views.DragCheckedTv
-            android:id="@+id/img6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/flashlight_selector"
-            android:clickable="true"
-            android:tag="circle1" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/left_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10dp"
+                    >
 
-    </com.jackiehou.dragdemo.views.CircleLayoutPlanB>
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/left_btn1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="item1"
+                        android:tag="left1"
+                        android:layout_centerHorizontal="true"
+                        />
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/left_btn2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="item2"
+                        android:tag="left2"
+                        android:layout_centerHorizontal="true"
+                        />
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/left_btn3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="item3"
+                        android:tag="left3"
+                        android:layout_centerHorizontal="true"
+                        />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/cl"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true">
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/bottom_btn1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="item1"
-            />
-        <com.jackiehou.dragdemo.views.DragButton
-            android:id="@+id/bottom_btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="item2"
-            />
-    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/right_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    >
+
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/right_btn1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="item1"
+                        android:tag="right1"
+                        android:layout_centerHorizontal="true"
+                        />
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/right_btn2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="item2"
+                        android:tag="right2"
+                        android:layout_centerHorizontal="true"
+                        />
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/right_btn3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:tag="right1"
+                        android:layout_centerHorizontal="true"
+                        />
+
+                </LinearLayout>
+
+
+                <com.jackiehou.dragdemo.views.CircleLayout
+                    android:id="@+id/cl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/left_ll"
+                    android:layout_toStartOf="@+id/right_ll">
+                    <ImageView
+                        android:id="@+id/center_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@mipmap/steeringwheel"/>
+                    <com.jackiehou.dragdemo.views.DragImagView
+                        android:id="@+id/img1"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/svg_break_rules"
+                        android:tag="circle1"
+                        android:clickable="true"
+                        />
+                    <com.jackiehou.dragdemo.views.DragImagView
+                        android:id="@+id/img2"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/svg_weather"
+                        android:clickable="true"
+                        android:tag="circle1"/>
+
+                    <com.jackiehou.dragdemo.views.DragImagView
+                        android:id="@+id/img3"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/svg_oil"
+                        android:clickable="true"
+                        android:tag="circle1"/>
+                    <com.jackiehou.dragdemo.views.DragImagView
+                        android:id="@+id/img4"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/svg_car_insurance"
+                        android:clickable="true"
+                        android:tag="circle1"/>
+                    <com.jackiehou.dragdemo.views.DragImagView
+                        android:id="@+id/img5"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/svg_oil_value"
+                        android:clickable="true"
+                        android:tag="circle1"/>
+                    <com.jackiehou.dragdemo.views.DragImagView
+                        android:id="@+id/img6"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/svg_value"
+                        android:clickable="true"
+                        android:tag="circle1" />
+
+                </com.jackiehou.dragdemo.views.CircleLayout>
+                <LinearLayout
+                    android:id="@+id/bottom_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/cl"
+                    android:layout_marginTop="20dp"
+                    android:layout_centerHorizontal="true">
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/bottom_btn1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="item1"
+                        />
+                    <com.jackiehou.dragdemo.views.DragButton
+                        android:id="@+id/bottom_btn2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="item2"
+                        />
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+
 
 </com.jackiehou.dragdemo.views.DragLayout>

@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -16,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,9 +25,9 @@ import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.jackiehou.dragdemo.Utils;
-import com.jackiehou.dragdemo.entity.DragItemEntity;
+import com.jackiehou.dragdemo.db.OrmHelper;
+import com.jackiehou.dragdemo.greendao.DragItemEntity;
 import com.jackiehou.dragdemo.entity.DragTaget;
-import com.jackiehou.dragdemo.manager.OrmHelper;
 
 import java.util.List;
 
@@ -42,14 +43,20 @@ public class DragHelper implements GestureDetector.OnGestureListener{
 
     public static final String TAG = DragLayout.class.getSimpleName();
 
+    public interface OnDragEndCallback{
+        public void onDragEnd();
+    }
+
+    OnDragEndCallback onDragEndCallback;
+
     private GestureDetectorCompat mDetector;
 
     DragLayout dragLayout;
 
     Rect dragRect;
 
-    LinearLayout mLeftLayout, mRightLayout;
-    CircleLayoutPlanB mCircleLayout;
+    LinearLayout mLeftLayout, mRightLayout,mBottomLayout;
+    CircleLayout mCircleLayout;
 
     float lastX, lastY;
 
@@ -62,68 +69,57 @@ public class DragHelper implements GestureDetector.OnGestureListener{
     //圆形拖拽Layout的矩形区域
     Rect mCircleRect;
 
+    //底部拖拽Layout的矩形区域
+    Rect mBottomRect;
+
     List<DragTaget> leftRects;
 
     List<DragTaget> rightRects;
 
     List<DragTaget> circleRects;
 
-    ImageView dragTagetView;
+    List<DragTaget> bottomRects;
 
-    TextView animView;
+    AppCompatImageView dragTagetView;
 
-    TextView fromView;
+    AppCompatTextView animView;
+
+    View fromView;
 
     Rect fromRect;
 
     DragTaget to;
 
-    TextView toView;
+    View toView;
 
     double changeCorner;
 
     AnimatorSet exchangedAnim;
 
+    OrmHelper ormHelper;
+
     public DragHelper(DragLayout dragLayout) {
         this.dragLayout = dragLayout;
         this.dragLayout.setDragHelper(this);
         //dragLayout.setOnTouchListener((v,e) -> onTouchEvent(e));
+        ormHelper = OrmHelper.getHelper();
     }
 
-    public DragHelper(DragLayout dragLayout, LinearLayout mLeftLayout, LinearLayout mRightLayout, CircleLayoutPlanB mCircleLayout) {
+    public DragHelper(DragLayout dragLayout, LinearLayout mLeftLayout, LinearLayout mRightLayout, CircleLayout mCircleLayout, LinearLayout bottomLayout) {
         this.dragLayout = dragLayout;
         this.mLeftLayout = mLeftLayout;
         this.mRightLayout = mRightLayout;
         this.mCircleLayout = mCircleLayout;
+        this.mBottomLayout = bottomLayout;
         this.dragLayout.setDragHelper(this);
 
+        ormHelper = OrmHelper.getHelper();
         mDetector =  new GestureDetectorCompat(dragLayout.getContext(),this);
     }
 
-    public void setmLeftRect(Rect mLeftRect) {
-        this.mLeftRect = mLeftRect;
+    public void setOnDragEndCallback(OnDragEndCallback onDragEndCallback) {
+        this.onDragEndCallback = onDragEndCallback;
     }
-
-    public void setmRightRect(Rect mRightRect) {
-        this.mRightRect = mRightRect;
-    }
-
-    public void setmCircleRect(Rect mCircleRect) {
-        this.mCircleRect = mCircleRect;
-    }
-
-    public void setLeftRects(List<DragTaget> leftRects) {
-        this.leftRects = leftRects;
-    }
-
-    public void setRightRects(List<DragTaget> rightRects) {
-        this.rightRects = rightRects;
-    }
-
-    public void setCircleRects(List<DragTaget> circleRects) {
-        this.circleRects = circleRects;
-    }
-
 
     /**
      * 把拖拽的view的截图添加DragLayout中去
@@ -131,7 +127,8 @@ public class DragHelper implements GestureDetector.OnGestureListener{
      * @param context
      * @param view
      */
-    public void addToDragLayout(Context context, TextView view) {
+    public void addToDragLayout(Context context, View view) {
+        Log.w(TAG,"addToDragLayout view = "+view);
         if (view == null) {
             return;
         }
@@ -145,10 +142,13 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         playScaleAnim();
     }
 
+    /**
+     * 创建放大的动画
+     */
     private void playScaleAnim() {
         AnimatorSet animatorSet = new AnimatorSet();
         float toValue = 1.1f;
-        if(fromView instanceof CheckedTextView){
+        if(fromView instanceof ImageView){
             toValue = 2f;
         }
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(dragTagetView, "scaleX", 1f, toValue);
@@ -175,7 +175,7 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         }
 
         if (dragTagetView == null) {
-            dragTagetView = new ImageView(context);
+            dragTagetView = new AppCompatImageView(context);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 dragTagetView.setTranslationZ(1);
             }
@@ -202,20 +202,24 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         Rect leftRect = new Rect();
         mLeftLayout.getGlobalVisibleRect(leftRect);
         if (leftRect.equals(mLeftRect) && changeCorner != mCircleLayout.getChangeCorner()) {
-            circleRects =getRectsByData(context,mCircleLayout,Stream.of(OrmHelper.getHelper().getCircleDragItem()));
+            circleRects =getRectsByData(context,mCircleLayout,Stream.of(ormHelper.getCircleDragItem()));
         } else {
             Rect rightRect = new Rect();
             mRightLayout.getGlobalVisibleRect(rightRect);
             Rect circleRect = new Rect();
             mCircleLayout.getGlobalVisibleRect(circleRect);
+            Rect bottomRect = new Rect();
+            mBottomLayout.getGlobalVisibleRect(bottomRect);
 
             mLeftRect = leftRect;
             mRightRect = rightRect;
             mCircleRect = circleRect;
+            mBottomRect = bottomRect;
 
-            leftRects =getRectsByData(context,mLeftLayout,Stream.of(OrmHelper.getHelper().getLeftDragItem()));
-            rightRects =getRectsByData(context,mRightLayout,Stream.of(OrmHelper.getHelper().getRightDragItem()));
-            circleRects =getRectsByData(context,mCircleLayout,Stream.of(OrmHelper.getHelper().getCircleDragItem()));
+            leftRects =getRectsByData(context,mLeftLayout,Stream.of(ormHelper.getLeftDragItem()));
+            rightRects =getRectsByData(context,mRightLayout,Stream.of(ormHelper.getRightDragItem()));
+            circleRects =getRectsByData(context,mCircleLayout,Stream.of(ormHelper.getCircleDragItem()));
+            bottomRects = getRectsByData(context,mBottomLayout,Stream.of(ormHelper.getBottomDragItem()));
         }
         changeCorner = mCircleLayout.getChangeCorner();
     }
@@ -237,6 +241,12 @@ public class DragHelper implements GestureDetector.OnGestureListener{
                 }).collect(toList());
     }
 
+    public void dispatchTouchEvent(MotionEvent ev) {
+        if(ev.getAction() == MotionEvent.ACTION_UP ||ev.getAction() == MotionEvent.ACTION_CANCEL){
+            endDrag(ev);
+        }
+    }
+
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         float rawX = ev.getRawX();
         float rawY = ev.getRawY();
@@ -251,7 +261,7 @@ public class DragHelper implements GestureDetector.OnGestureListener{
                 break;
             case MotionEvent.ACTION_UP:
                 Log.w(TAG, "onInterceptTouchEvent ACTION_UP rawX = " + rawX + ", rawY = " + rawY);
-                endDrag(ev);
+                //endDrag(ev);
                 break;
             default:
                 break;
@@ -273,6 +283,11 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         return mDetector.onTouchEvent(e);
     }
 
+    /**
+     * 判断x、y坐标是否在这些矩形区域内
+     * @param x
+     * @param y
+     */
     private void checkRect(final int x, final int y) {
         if(fromRect.contains(x,y)){
             updateToView();
@@ -289,13 +304,19 @@ public class DragHelper implements GestureDetector.OnGestureListener{
             updateToView();
             toView = null;
         }
-
     }
 
+    /**
+     * 判断x、y坐标是否在这些矩形区域内
+     * @param x
+     * @param y
+     * @param rects
+     * @param layout
+     */
     private void checkRect(final int x, final int y, List<DragTaget> rects, ViewGroup layout) {
         for (DragTaget taget : rects) {
             if (taget.rect.contains(x, y)) {
-                TextView view = (TextView) layout.findViewById(taget.id);
+                View view = layout.findViewById(taget.id);
                 if (toView == null || toView != view) {
                     playMoveAnim(view,taget.rect);
                     toView = view;
@@ -305,11 +326,15 @@ public class DragHelper implements GestureDetector.OnGestureListener{
             }
         }
         updateToView();
-
         toView = null;
     }
 
-    private void playMoveAnim(TextView view,Rect rect){
+    /**
+     * 播放交换动画
+     * @param view
+     * @param rect
+     */
+    private void playMoveAnim(View view,Rect rect){
         if(toView != view){
             updateToView();
             createAnimView(view,rect);
@@ -326,26 +351,31 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         }
     }
 
-    private void createAnimView(TextView view,Rect rect){
-
+    /**
+     * 创建拖拽动画的目标view
+     * @param view
+     * @param rect
+     */
+    private void createAnimView(View view,Rect rect){
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(fromView.getWidth(), fromView.getHeight());
         DragItemEntity item = (DragItemEntity) view.getTag();
-        animView = new TextView(fromView.getContext());
+        animView = new AppCompatTextView(fromView.getContext());
         if(fromView instanceof DragButton){
             animView.setGravity(Gravity.CENTER);
             animView.setText(item.getTitle());
             animView.setBackground(fromView.getBackground());
         }else {
-            animView.setBackgroundResource( Utils.getResId(fromView.getContext(),"drawable",item.getIconName()));
+            animView.setBackgroundResource(Utils.getResId(fromView.getContext(),"drawable",item.getIconName()));
         }
 
         dragLayout.addView(animView,params);
         animView.setTranslationX(rect.left);
         animView.setTranslationY(rect.top - dragRect.top);
-
-
     }
 
+    /**
+     * 取消交换的动画
+     */
     private void cleanExchangeAnim(){
         if(exchangedAnim != null && exchangedAnim.isRunning()){
             exchangedAnim.cancel();
@@ -357,7 +387,9 @@ public class DragHelper implements GestureDetector.OnGestureListener{
     }
 
 
-
+    /**
+     * 重置toView的状态
+     */
     private void updateToView() {
         if (toView != null) {
             toView.setVisibility(View.VISIBLE);
@@ -365,23 +397,30 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         cleanExchangeAnim();
     }
 
-    private void updateFromView(DragItemEntity item) {
+    /*private void updateFromView(DragItemEntity item) {
         if (fromView instanceof CheckedTextView) {
             fromView.setBackgroundResource(Utils.getResId(fromView.getContext(), "drawable", item.getIconName()));
         } else {
             fromView.setText(item.getTitle());
         }
-    }
+    }*/
 
-    private void updateView(DragItemEntity item, TextView textView) {
-        if (textView instanceof CheckedTextView) {
-            textView.setBackgroundResource(Utils.getResId(textView.getContext(), "drawable", item.getIconName()));
+    private void updateView(DragItemEntity item, View view) {
+        if (view instanceof TextView) {
+            ((TextView)view).setText(item.getTitle());
+
         } else {
-            textView.setText(item.getTitle());
+            view.setBackgroundResource(Utils.getResId(view.getContext(), "drawable", item.getIconName()));
         }
     }
 
+    /**
+     * up事件停止拖拽
+     * 更新数据
+     * @param e
+     */
     private void endDrag(MotionEvent e) {
+        Log.w(TAG, "endDrag fromView = " + fromView);
         if(fromView == null){
             return;
         }
@@ -389,15 +428,20 @@ public class DragHelper implements GestureDetector.OnGestureListener{
         //清除拖拽view的状态
         cleanDragViewStatus();
         if (toView == null) {
-
-            updateFromView(fromItem);
-
+            updateView(fromItem,fromView);
         } else {
+            DragItemEntity toItem = (DragItemEntity) toView.getTag();
             updateToView();
-            updateFromView((DragItemEntity) toView.getTag());
-            fromView.setTag(toView.getTag());
+            //交换内存数据和显示
+            fromView.setTag(toItem);
             toView.setTag(fromItem);
+            updateView(toItem, fromView);
             updateView(fromItem, toView);
+            //交换数据库数据
+            ormHelper.changeDragItem(fromItem,toItem);
+            if(onDragEndCallback != null){
+                onDragEndCallback.onDragEnd();
+            }
         }
         fromView.setVisibility(View.VISIBLE);
         fromView = null;

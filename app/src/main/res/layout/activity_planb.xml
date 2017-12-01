@@ -9,7 +9,7 @@
 
 
 
-    <com.jackiehou.dragdemo.views.CircleLayoutPlanB
+    <com.jackiehou.dragdemo.views.CircleLayout
         android:id="@+id/cl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -41,7 +41,7 @@
             android:text="item4"
             />
 
-    </com.jackiehou.dragdemo.views.CircleLayoutPlanB>
+    </com.jackiehou.dragdemo.views.CircleLayout>
 
 
 </com.zhy.android.percent.support.PercentRelativeLayout>

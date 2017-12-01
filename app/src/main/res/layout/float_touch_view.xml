@@ -2,16 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
-    <ImageView
+    <com.jackiehou.dragdemo.views.PercentImagView
         android:id="@+id/iv"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:padding="5dp"
-        android:background="@drawable/assistive_touch_background"
-        android:gravity="center"
-        android:src="@mipmap/ic_launcher"
-        android:textColor="#FFFFFFFF" />
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:background="@mipmap/ball_tool"
+         />
 
 </RelativeLayout>

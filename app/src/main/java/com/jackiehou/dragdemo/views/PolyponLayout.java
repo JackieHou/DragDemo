@@ -57,13 +57,18 @@ public class PolyponLayout extends RelativeLayout {
             path.lineTo(change(31), change(34));
             path.lineTo(change(43), change(19));
 
+
+            //path.addArc();
             path.close();
         }
 
 
         canvas.clipPath(path);
 
+
+
     }
+
 
 
     private float change(float x) {

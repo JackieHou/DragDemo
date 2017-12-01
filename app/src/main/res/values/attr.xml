@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="percent" format="float"/>
+
+    <declare-styleable name="CircleLayout">
+        <attr name="radium" format="dimension"/>
+        <attr name="changeCorner" format="float"/>
+        <attr name="percent"/>
+    </declare-styleable>
+    <declare-styleable name="PercentImagView">
+        <!--整个屏幕宽度的百分比-->
+        <attr name="percent"/>
+    </declare-styleable>
+</resources>

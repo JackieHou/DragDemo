@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 
 import com.jackiehou.dragdemo.R;
 import com.jackiehou.dragdemo.manager.FloatWindowManager;
@@ -25,11 +26,13 @@ public class NavigationBar {
     public static final int DELAYED_TIME = 3200;
 
     //长宽的比例
-    public static final float PERCENT = 0.176f;
+    public static final float PERCENT = 0.196f;
 
     private WindowManager windowManager;
 
     private View mNaviBarView;
+
+    private ImageView holeImg;
 
     private View animTarget;
 
@@ -37,6 +40,7 @@ public class NavigationBar {
 
     private final int widthPixels;
     private final int heightPixels;
+    private final int sceenHeight;
 
     private boolean mIsShowing = false;
 
@@ -46,6 +50,7 @@ public class NavigationBar {
         this.windowManager = windowManager;
         mTouchSlop = FloatWindowManager.getInstance().getTouchSlop() / 2;
         widthPixels = FloatWindowManager.getInstance().getWidthPixels();
+        sceenHeight = FloatWindowManager.getInstance().getHeightPixels();
         heightPixels = (int) (widthPixels * PERCENT);
     }
 
@@ -55,10 +60,11 @@ public class NavigationBar {
      * @param context
      */
     private void createNaviBarView(Context context) {
-        mNaviBarView = View.inflate(context, R.layout.navi_bar_view, null);
+        mNaviBarView = View.inflate(context, R.layout.navi_bar_view1, null);
         animTarget = mNaviBarView.findViewById(R.id.nav_bar_prl);
-        /*animTarget.setTranslationY(80);
-        animTarget.setTranslationX(50);*/
+        holeImg = (ImageView) mNaviBarView.findViewById(R.id.nav_hole);
+
+        holeImg.setVisibility(isFloatInNavi()?View.VISIBLE:View.GONE);
         hideNaviBarRunnable = () -> {
             hideNaviBar(true);
         };
@@ -88,7 +94,7 @@ public class NavigationBar {
      * @param context
      * @param playAnim 是否播放动画
      */
-    public void showNaviBar(Context context, boolean playAnim) {
+    public void showNaviBar(Context context, boolean playAnim,boolean isAddCallback) {
         removeHideBarCallback();
         if (!isShowing()) {
             mIsShowing = true;
@@ -99,16 +105,21 @@ public class NavigationBar {
             if (playAnim) {
                 animTarget.setTranslationY(heightPixels);
                 ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(animTarget, "translationY", heightPixels, 0);
-                objectAnimator.setDuration(200);
+                objectAnimator.setDuration(1000);
                 objectAnimator.setInterpolator(new AccelerateInterpolator());
                 objectAnimator.addListener(new NaviAnimatorListener());
                 objectAnimator.start();
             } else {
-
+                if(isFloatInNavi()){
+                    holeImg.setVisibility(View.GONE);
+                    FloatWindowManager.getInstance().showFloatTouchView();
+                }
                 animTarget.setTranslationY(0);
             }
         }
-        addHideBarCallback();
+        if(isAddCallback){
+            addHideBarCallback();
+        }
     }
 
     /**
@@ -118,6 +129,10 @@ public class NavigationBar {
      */
     public void hideNaviBar(boolean playAnim) {
         if (isShowing()) {
+            if(isFloatInNavi()){
+                holeImg.setVisibility(View.VISIBLE);
+                FloatWindowManager.getInstance().hideFloatTouchView();
+            }
             animTarget.setTranslationY(0);
             if (playAnim) {
                 ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(animTarget, "translationY", 0, heightPixels);
@@ -166,6 +181,7 @@ public class NavigationBar {
         }
     }
 
+
     /**
      * 是否显示了导航栏
      *
@@ -173,6 +189,10 @@ public class NavigationBar {
      */
     public boolean isShowing() {
         return mIsShowing && mNaviBarView != null;
+    }
+
+    public boolean isFloatInNavi(){
+        return FloatWindowManager.getInstance().isFloatInNavi();
     }
 
     /**
@@ -191,6 +211,11 @@ public class NavigationBar {
             }
             if(mNaviBarView != null){
                 mNaviBarView.setVisibility(mIsShowing ? View.VISIBLE :View.GONE);
+            }
+            if(mIsShowing && isFloatInNavi()){
+                holeImg.setVisibility(View.GONE);
+                FloatWindowManager.getInstance().showFloatTouchView();
+
             }
         }
 

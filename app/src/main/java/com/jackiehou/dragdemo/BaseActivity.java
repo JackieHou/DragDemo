@@ -33,7 +33,9 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        float x = ev.getX();
+        if(this instanceof DragActivity){
+            return super.dispatchTouchEvent(ev);
+        }
         float y = ev.getY();
         switch (ev.getAction()){
             case MotionEvent.ACTION_DOWN:

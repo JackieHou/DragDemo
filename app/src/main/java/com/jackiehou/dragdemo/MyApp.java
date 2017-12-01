@@ -2,10 +2,14 @@ package com.jackiehou.dragdemo;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
-import com.jackiehou.dragdemo.manager.OrmHelper;
+import com.jackiehou.dragdemo.db.OrmHelper;
+
+import io.paperdb.Paper;
 
 /************************************************************
  * Created by houjie
@@ -17,14 +21,18 @@ import com.jackiehou.dragdemo.manager.OrmHelper;
 public class MyApp extends Application implements Application.ActivityLifecycleCallbacks
 {
 
-    private WindowManager windowManager;
 
     static MyApp myApp;
+
+    private int widthPixels;
+    private int heightPixels;
 
     @Override
     public void onCreate() {
         super.onCreate();
         myApp = this;
+        initSize();
+        Paper.init(this);
 
         OrmHelper.getHelper(this).init();
 
@@ -35,13 +43,23 @@ public class MyApp extends Application implements Application.ActivityLifecycleC
         registerActivityLifecycleCallbacks(this);
     }
 
-    public WindowManager getWindowManager() {
-        return windowManager;
+    private void initSize() {
+        WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        // 获取手机屏幕尺寸
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(outMetrics);
+        widthPixels = outMetrics.widthPixels;
+        heightPixels = outMetrics.heightPixels;
     }
 
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
+    public int getWidthPixels() {
+        return widthPixels;
     }
+
+    public int getHeightPixels() {
+        return heightPixels;
+    }
+
 
     public static MyApp getMyApp() {
         return myApp;

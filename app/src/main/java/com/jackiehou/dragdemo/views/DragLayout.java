@@ -39,14 +39,28 @@ public class DragLayout extends PercentRelativeLayout {
     }
 
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(dragHelper != null){
+           dragHelper.dispatchTouchEvent(ev);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return dragHelper.onInterceptTouchEvent(ev);
+        if(dragHelper != null){
+            return dragHelper.onInterceptTouchEvent(ev);
+        }
+        return super.onInterceptTouchEvent(ev);
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return dragHelper.onTouchEvent(event);
+        if(dragHelper != null){
+            return dragHelper.onTouchEvent(event);
+        }
+        return super.onTouchEvent(event);
     }
 }
