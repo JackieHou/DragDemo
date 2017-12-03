@@ -45,6 +45,7 @@ public class CircleLayout extends ViewGroup implements GestureDetector.OnGesture
     private double mChangeCorner = 0.0;
     private Pair<Float, Float> mStart;
     private boolean isCanScroll = true;
+    private boolean isCenterCanRotaior = true;
     private boolean isDragging = false;
     private FlingRunnable mFlingRunnable;
 
@@ -216,7 +217,10 @@ public class CircleLayout extends ViewGroup implements GestureDetector.OnGesture
         if (mCenterView != null) {
             mCenterView.layout(mCenterX - mCenterView.getMeasuredWidth() / 2, mCenterY - mCenterView.getMeasuredHeight() / 2
                     , mCenterX + mCenterView.getMeasuredWidth() / 2, mCenterY + mCenterView.getMeasuredHeight() / 2);
-            mCenterView.setRotation((float) (mChangeCorner - 90));
+            if(isCenterCanRotaior){
+                mCenterView.setRotation((float) (mChangeCorner - 90));
+            }
+
         }
 
     }
@@ -424,6 +428,11 @@ public class CircleLayout extends ViewGroup implements GestureDetector.OnGesture
     public void setCanScroll(boolean canScroll) {
         isCanScroll = canScroll;
     }
+
+    public void setCenterCanRotation(boolean canRotaior){
+        isCenterCanRotaior = canRotaior;
+    }
+
 
     @SuppressWarnings("unused")
     public boolean isDragging() {

@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -51,6 +52,13 @@ public class FloatPopView extends PopupWindow{
         initPopupWindow(context);
     }
 
+    public FloatPopView(Context context,int width,int height) {
+        super(context,null,0);
+        widthPixels = width;
+        heightPixels = height;
+        initPopupWindow(context);
+    }
+
     private void initPopupWindow(Context context) {
         //使用view来引入布局
         LayoutInflater inflater = (LayoutInflater) context
@@ -58,7 +66,8 @@ public class FloatPopView extends PopupWindow{
         View contentView = inflater.inflate(R.layout.float_pop_view, null);
 
         circleLayout = (CircleLayout) contentView.findViewById(R.id.circle_layout);
-        circleLayout.setCanScroll(false);
+        //circleLayout.setCanScroll(false);
+        circleLayout.setCenterCanRotation(false);
         setupItemView(context);
         setupCenterView(context,inflater);
         contentView.setOnClickListener(view ->{
@@ -85,7 +94,7 @@ public class FloatPopView extends PopupWindow{
         Drawable tintIcon = DrawableCompat.wrap(icon);
         DrawableCompat.setTintList(tintIcon, context.getResources().getColorStateList(android.R.color.white));
         imageView.setImageDrawable(tintIcon);
-        circleLayout.setCenterView(view);
+        //circleLayout.setCenterView(view);
     }
 
     /**
@@ -101,22 +110,42 @@ public class FloatPopView extends PopupWindow{
                     AppCompatImageView imageView = (AppCompatImageView) view.findViewById(R.id.icon_aciv);
                     TextView tv = (TextView) view.findViewById(R.id.title_actv);
                     tv.setText(item.getTitle());
-                    //imageView.setBackgroundResource(Utils.getResId(context,"drawable",item.getIconName()));
                     int resId = Utils.getResId(context,"drawable",item.getIconName());
-                    //imageView.setBackgroundTintList();
-                    Drawable icon = context.getResources().getDrawable(resId);
-                    Drawable tintIcon = DrawableCompat.wrap(icon);
-                    DrawableCompat.setTintList(tintIcon, context.getResources().getColorStateList(android.R.color.white));
-                    imageView.setImageDrawable(tintIcon);
+                    setItemDrawable(context,imageView,resId);
                     view.setTag(item);
                 });
+        View view = circleLayout.findViewById(R.id.center_view);
+        if(view != null){
+            setItemDrawable(context,(ImageView)(view.findViewById(R.id.icon_aciv)),R.drawable.svg_home);
+        }
     }
 
+    private void setItemDrawable(Context context, ImageView imageView,int resId){
+        Drawable icon = context.getResources().getDrawable(resId);
+        Drawable tintIcon = DrawableCompat.wrap(icon);
+        DrawableCompat.setTintList(tintIcon, context.getResources().getColorStateList(android.R.color.white));
+        imageView.setImageDrawable(tintIcon);
+    }
+
+
     public void showView(Rect rect){
-        fromRect = rect;
         Activity activity = (Activity) ActivityRecorder.getInstance().getContext();
-        if(activity != null){
-            super.showAtLocation(activity.getWindow().getDecorView(), Gravity.TOP, 0, 0);
+        if(activity != null) {
+            showView(activity.getWindow().getDecorView(),rect);
+        }
+    }
+
+    public void showView(Context context ,Rect rect){
+        if(context != null && context instanceof Activity){
+            showView(((Activity)context).getWindow().getDecorView(),rect);
+        }
+
+    }
+
+    public void showView(View view ,Rect rect){
+        fromRect = rect;
+        if(view != null){
+            super.showAtLocation(view, Gravity.TOP, 0, 0);
 
             Log.w(TAG,"showView rect="+rect);
 
@@ -152,8 +181,6 @@ public class FloatPopView extends PopupWindow{
             // TODO: 2017/11/21 通过bugly 上传日志
 
         }
-
-
     }
 
     @Override

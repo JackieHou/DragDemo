@@ -13,6 +13,8 @@
         app:percent="0.7"
         android:layout_centerInParent="true"
         android:background="@drawable/circle_bg">
+        <include android:id="@+id/center_view"
+            layout="@layout/float_panel_item_view"/>
         <include android:id="@+id/img1"
                  layout="@layout/float_panel_item_view"/>
         <include android:id="@+id/img2"

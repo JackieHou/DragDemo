@@ -36,11 +36,11 @@ public class MyApp extends Application implements Application.ActivityLifecycleC
 
         OrmHelper.getHelper(this).init();
 
-        ActivityRecorder.getInstance().init();
+        //ActivityRecorder.getInstance().init();
 
 
 
-        registerActivityLifecycleCallbacks(this);
+        //registerActivityLifecycleCallbacks(this);
     }
 
     private void initSize() {

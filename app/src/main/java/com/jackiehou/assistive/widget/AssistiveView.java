@@ -1,13 +1,16 @@
 package com.jackiehou.assistive.widget;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -45,7 +48,9 @@ public class AssistiveView extends Button {
     private float lastY;
 
     private boolean ismoving;
+    private boolean isAlreadyShow;
 
+    View.OnClickListener onClickListener;
 
     public AssistiveView(Context context, AssistiveHelper assistiveHelper){
         super(context);
@@ -61,6 +66,11 @@ public class AssistiveView extends Button {
         naviBarHeight = (int) (parentWidth* NaviBarView.PERCENT);
     }
 
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        //super.setOnClickListener(l);
+        onClickListener = l;
+    }
 
     @Override
     protected void onAttachedToWindow() {
@@ -80,13 +90,15 @@ public class AssistiveView extends Button {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 ismoving = false;
+                isAlreadyShow = false;
                 lastX = x;
                 lastY = y;
-                //todo 显示导航栏
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (ismoving || Math.abs(x - lastX) > mTouchSlop || Math.abs(y - lastY) > mTouchSlop) {
                     ismoving = true;
+                    showNaviBar();
                 }
                 updateViewPosition(x, y);
                 break;
@@ -101,6 +113,16 @@ public class AssistiveView extends Button {
 
         //return ismoving;
         return super.onTouchEvent(e);
+    }
+
+    private void showNaviBar(){
+        if(isAlreadyShow){
+            return;
+        }
+        if(mAssistiveHelper != null){
+            mAssistiveHelper.showNavBar(true,false);
+            isAlreadyShow = true;
+        }
     }
 
     private void updateViewPosition(float x, float y) {
@@ -125,28 +147,38 @@ public class AssistiveView extends Button {
 
     private void endDrag(MotionEvent e) {
         if(!ismoving && e.getAction() == MotionEvent.ACTION_UP){
-            Toast.makeText(getContext(),"endDrag",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(),"endDrag",Toast.LENGTH_SHORT).show();
+            if(onClickListener != null){
+                onClickListener.onClick(this);
+            }
         }
         if(ismoving){
-            ObjectAnimator objectAnimator;
+            AnimatorSet animatorSet = new AnimatorSet();
             float transX = getTranslationX();
             float transY = getTranslationY();
             if(getTranslationY() > parentHeigth -(naviBarHeight*2)){
-                Pair<Integer,Integer> endPair = mAssistiveHelper.getNavHolePos();
-                objectAnimator = ObjectAnimator.ofObject(this,"translationPair",new PairEvaluator(),
-                        new Pair<Integer,Integer>((int)transX,(int)transY),endPair);
+                getInNavAnim(animatorSet);
             }else{
                 float minX = Math.min(transX,(parentWidth-transX-getWidth()));
                 float minY = Math.min(transY,(parentHeigth-transY-getHeight()));
                 if (minX <= minY) {
                     float toX = (minX == transX) ? 0:(parentWidth-getWidth());
-                    objectAnimator = ObjectAnimator.ofFloat(this, "translationX",toX);
+                    AnimatorSet.Builder builder = animatorSet.play(ObjectAnimator.ofFloat(this, "translationX",toX));
+                    if(transY < 0){
+                        builder.with(ObjectAnimator.ofFloat(this, "translationY",0));
+                    }
                 }else {
-                    float toY = (minY == transY) ? 0:(parentHeigth-getHeight());
-                    objectAnimator = ObjectAnimator.ofFloat(this, "translationY",toY);
+                    if(minY ==transY){
+                        AnimatorSet.Builder builder = animatorSet.play(ObjectAnimator.ofFloat(this, "translationY",0));
+                        if(transX < 0 || transX+getWidth() > parentWidth){
+                            builder.with(ObjectAnimator.ofFloat(this, "translationX",(transX <0) ? 0 :parentWidth-getWidth()));
+                        }
+                    }else {
+                        getInNavAnim(animatorSet);
+                    }
                 }
             }
-            objectAnimator.addListener(new Animator.AnimatorListener() {
+            animatorSet.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
                 }
@@ -163,40 +195,26 @@ public class AssistiveView extends Button {
                 public void onAnimationRepeat(Animator animation) {
                 }
             });
-            objectAnimator.setInterpolator(new AccelerateInterpolator());
-            objectAnimator.setDuration(200);
-            objectAnimator.start();
+            animatorSet.setInterpolator(new AccelerateInterpolator());
+            animatorSet.setDuration(200);
+            animatorSet.start();
+            if(mAssistiveHelper != null){
+                mAssistiveHelper.addHideBarCallback();
+            }
         }
+
+    }
+
+    public void getInNavAnim(AnimatorSet animatorSet){
+        Pair<Integer,Integer> endPair = mAssistiveHelper.getNavHolePos();
+        ObjectAnimator tranX = ObjectAnimator.ofFloat(this, "translationX",endPair.first);
+        ObjectAnimator tranY = ObjectAnimator.ofFloat(this, "translationY",endPair.second);
+        animatorSet.play(tranX).with(tranY);
     }
 
     public void saveLastCoords(){
           Paper.book().write(AssistiveHelper.KEY_COORDS,new FloatCoords((int)getTranslationX(),(int)getTranslationY()));
 
-    }
-
-    public void setTranslationPair(Pair<Integer,Integer> pair){
-        setTranslationX(pair.first);
-        setTranslationY(pair.second);
-    }
-
-    /**
-     * 动画估值器
-     */
-    public class PairEvaluator implements TypeEvaluator<Pair<Integer,Integer>> {
-
-        @Override
-        public Pair<Integer, Integer> evaluate(float fraction, Pair<Integer, Integer> startValue, Pair<Integer, Integer> endValue) {
-            //Log.w(TAG,"PairEvaluator fraction = "+fraction+"startValue = "+startValue);
-            if(fraction <=0f){
-                return startValue;
-            }
-            if(fraction >=1f){
-                return endValue;
-            }
-            int devX = (int) ((endValue.first-startValue.first)*fraction);
-            int devY = (int) ((endValue.second-startValue.second)*fraction);
-            return new Pair<Integer, Integer>(startValue.first+devX,startValue.second+devY);
-        }
     }
 
     /**
@@ -205,17 +223,16 @@ public class AssistiveView extends Button {
      */
     public ObjectAnimator getShowObjectAnimator(){
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this, "translationY",parentHeigth,parentHeigth-getHeight());
-        objectAnimator.setDuration(250);
+        objectAnimator.setDuration(200);
         objectAnimator.setInterpolator(new BounceInterpolator());
         return objectAnimator;
     }
 
     public ObjectAnimator getHideObjectAnimator(){
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this, "translationY",parentHeigth-getHeight(),parentHeigth);
-        objectAnimator.setDuration(250);
+        objectAnimator.setDuration(200);
         objectAnimator.setInterpolator(new DecelerateInterpolator());
         return objectAnimator;
     }
-
 
 }
